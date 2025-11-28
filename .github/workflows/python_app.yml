@@ -37,4 +37,9 @@ jobs:
           echo "<h1>Model trained successfully!</h1>" > deploy/index.html
           echo "<h2>All tests passed ✔</h2>" >> deploy/index.html
 
-      
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }}
