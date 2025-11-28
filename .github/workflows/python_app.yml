@@ -1,48 +1,42 @@
-name: ML CI/CD Pipeline
+name: ML Zero Level CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  build-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Add src to PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
-
-      - name: Run tests
+      - name: Run Tests
         run: pytest -q
 
-      # 📌 Upload website files (index.html) to Pages artifact
-      - name: Upload artifact for GitHub Pages
+      - name: Create Deployment Page
         if: success()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .   # folder that contains index.html
+        run: |
+          mkdir deploy
+          echo "<h1>Model trained successfully!</h1>" > deploy/index.html
+          echo "<h2>All tests passed ✔</h2>" >> deploy/index.html
 
-  deploy:
-    needs: build-test   # runs only if tests passed
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url:
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }}

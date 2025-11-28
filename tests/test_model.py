@@ -1,18 +1,15 @@
-# tests/test_model.py
-
 import os
-from src.model_utils import train_model, save_model
+from src.model_utils import train_model, MODEL_PATH
 
-def test_model_training():
+def test_training():
     model = train_model()
     assert model is not None
 
-def test_model_save():
-    model = train_model()
-    save_model(model, "model.pkl")
-    assert os.path.exists("model.pkl")
+def test_model_file_saved():
+    train_model()
+    assert os.path.exists(MODEL_PATH)
 
-def test_model_predict():
+def test_predict_method():
     model = train_model()
-    pred = model.predict([[2]])
+    pred = model.predict([[4]])
     assert pred is not None

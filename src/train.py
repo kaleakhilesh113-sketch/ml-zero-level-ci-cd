@@ -1,11 +1,5 @@
-# src/train.py
-
-from model_utils import train_model, save_model
-
-def main():
-    model = train_model()
-    save_model(model, "model.pkl")
-    print("Model trained and saved as model.pkl")
+from model_utils import train_model
 
 if __name__ == "__main__":
-    main()
+    train_model()
+    print("Model trained successfully!")

@@ -1,19 +1,18 @@
-# src/model_utils.py
-
 import joblib
-from sklearn.linear_model import LogisticRegression
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+import os
 
-def create_training_data():
-    X = np.array([[0], [1], [2], [3], [4], [5]])
-    y = np.array([0, 1, 0, 1, 0, 1])  # Even = 0, Odd = 1
+MODEL_PATH = "model.pkl"
+
+def prepare_data():
+    X = np.arange(0, 100).reshape(-1, 1)
+    y = np.array([1 if i % 2 == 0 else 0 for i in X])
     return X, y
 
 def train_model():
-    X, y = create_training_data()
+    X, y = prepare_data()
     model = LogisticRegression()
     model.fit(X, y)
+    joblib.dump(model, MODEL_PATH)
     return model
-
-def save_model(model, path="model.pkl"):
-    joblib.dump(model, path)
